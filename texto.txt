@@ -1,0 +1,16 @@
+{
+
+        
+        	switch(teste){
+           	 caso 1:
+               		float base, altura;
+		escreva("Digite o valor da base");
+		leia(base) ;
+		escreva("Digite o valor da altura");
+		leia(altura);
+		area = multiplicacao(base, altura);
+		escreva("Area do triangulo e ", area);
+              	break;
+           	
+	}
+}

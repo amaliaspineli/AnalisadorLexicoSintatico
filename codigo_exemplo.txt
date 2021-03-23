@@ -1,0 +1,30 @@
+{
+	int teste;    //criacao da variavel teste
+           	 float area;
+       	escreva("Digite um número de acordo com o caso");
+	escreva("1 - area do triangulo");
+	escreva("2 - area da circunferencia");
+	escreva("3 - sair do programa");
+        	leia(teste);    //entrada de dados
+        
+        	switch(teste){
+           	 caso 1:
+               		float base, altura;
+		escreva("Digite o valor da base");
+		leia(base) ;
+		escreva("Digite o valor da altura");
+		leia(altura);
+		area = multiplicacao(base, altura);
+		escreva("Area do triangulo e ", area);
+              	break;
+           	caso 2:
+               		float raio; 
+		escreva("Digite o valor do raio");
+		leia(raio);
+		area = multiplicacao(3.1416, potencia(raio,2));
+		escreva("Area da circunferencia e ", area);
+               	 break;    
+	caso 3:
+	break;   
+	}
+}

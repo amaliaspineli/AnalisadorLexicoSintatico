@@ -1,0 +1,11 @@
+{
+         float a = 6, b = 4, c = 2;
+              para (i = 0, i < 10, 2){ //incrementa 2
+	a = subtracao(soma(y, z), multiplicacao(y, z));
+	escreva(a);
+	b = multiplicacao(cosseno(y), seno(z));
+	escreva(b);
+	c = multiplicacao(3.1416, tangente(y));
+	escreva(c);
+              }
+}

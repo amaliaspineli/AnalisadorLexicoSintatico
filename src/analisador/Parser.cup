@@ -1,0 +1,120 @@
+package analisador;
+import java.io.*;
+import java_cup.runtime.*;
+
+//java -jar java-cup-11b.jar -parser Parser -symbols Sym Parser.cup
+
+parser code {:
+
+    private Symbol s;
+
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public void report_error(String message, Object info)  {
+        System.out.println("Warning - " + message);
+    }
+
+    public void report_fatal_error(String message, Object info) throws Exception {
+        throw new Exception();
+    }
+
+    public String linha_coluna(){
+        return this.s.right + " " + this.s.left;
+    }
+
+:}
+
+terminal FinalLinha, escreva, leia, retorna, comentario, QuebraLinha, bool, caractere;
+terminal AbParentese, Fchparentese, AbColchete, FchColchete, AbChave, FchChave;
+terminal se, senao, enquanto, para, caso, Variavel, OpRelacional, OpMatematica;
+terminal atribuicao, tipo, num, texto, erro, virgula, break1, switch1, DoisPontos, aspas, e, ou;
+
+non terminal START, EXPR, INICIO, corpo, decl, val, escolha, atrib;
+non terminal DeFSI, VariavelS, DeFchparentese, DeFOpMatematica, DeFenquanto;
+
+START ::= INICIO;
+
+INICIO ::= 	AbChave corpo FchChave |
+			AbChave FchChave;
+			
+corpo ::= corpo EXPR
+        | EXPR;	
+
+EXPR ::= se AbParentese DeFSI Fchparentese INICIO|
+		 
+		 senao INICIO|
+		 senao se AbParentese DeFSI Fchparentese INICIO|
+		 
+		 decl FinalLinha|
+		 
+		 escreva AbParentese texto Fchparentese FinalLinha|
+		 escreva AbParentese texto virgula VariavelS Fchparentese FinalLinha|
+		 escreva AbParentese VariavelS Fchparentese FinalLinha|
+		 
+		 leia AbParentese Variavel Fchparentese FinalLinha |
+		 
+		 escolha INICIO|
+		 
+		 caso num DoisPontos corpo break1 FinalLinha|
+		 caso num DoisPontos break1 FinalLinha|
+
+         Variavel atribuicao DeFOpMatematica FinalLinha|
+         
+         enquanto AbParentese DeFenquanto Fchparentese INICIO |
+         
+         para AbParentese DeFchparentese Fchparentese INICIO |
+         
+         retorna num FinalLinha|
+         retorna AbParentese Variavel Fchparentese FinalLinha|
+         retorna FinalLinha|
+         
+         comentario|
+         INICIO
+;
+
+escolha ::= switch1 AbParentese Variavel Fchparentese;
+
+val ::= num
+      | bool
+      | caractere;
+
+decl ::= tipo atrib; 
+
+atrib ::= Variavel
+       |  Variavel atribuicao val
+       |  Variavel atribuicao val virgula atrib
+       |  Variavel virgula atrib;
+
+DeFchparentese ::= Variavel atribuicao num virgula Variavel OpRelacional num virgula num |
+		   Variavel atribuicao num virgula Variavel OpRelacional Variavel virgula num |
+		   tipo Variavel atribuicao num virgula Variavel OpRelacional Variavel virgula num;
+
+DeFOpMatematica ::= OpMatematica AbParentese Variavel virgula Variavel Fchparentese |
+		   OpMatematica AbParentese Variavel virgula num Fchparentese |
+		   OpMatematica AbParentese num virgula Variavel Fchparentese |
+		   OpMatematica AbParentese num virgula num Fchparentese |
+		   OpMatematica AbParentese num virgula DeFOpMatematica Fchparentese |
+		   OpMatematica AbParentese Variavel virgula DeFOpMatematica Fchparentese |
+		   OpMatematica AbParentese DeFOpMatematica virgula DeFOpMatematica Fchparentese |
+		   OpMatematica AbParentese Variavel Fchparentese |
+		   OpMatematica AbParentese num Fchparentese;
+
+DeFenquanto ::= Variavel OpRelacional num |
+           Variavel OpRelacional Variavel |
+           Variavel OpRelacional num e DeFenquanto |
+           Variavel OpRelacional Variavel e DeFenquanto |
+           Variavel OpRelacional num ou DeFenquanto |
+           Variavel OpRelacional Variavel ou DeFenquanto |
+           Variavel;
+
+DeFSI ::= Variavel OpRelacional num |
+          Variavel OpRelacional Variavel |
+          Variavel OpRelacional num e DeFSI |
+          Variavel OpRelacional Variavel e DeFSI |
+          Variavel OpRelacional num ou DeFSI |
+          Variavel OpRelacional Variavel ou DeFSI;
+
+VariavelS ::= Variavel |
+		 	Variavel virgula VariavelS;
